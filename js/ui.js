@@ -29,6 +29,7 @@ class UI {
                 </div>
                 <div class="note-actions">
                     <button class="btn primary edit-btn" data-id="${note.id}">Editar</button>
+                    <button class="btn copy-btn" data-id="${note.id}">Copiar</button>
                     <button class="btn danger delete-btn" data-id="${note.id}">Borrar</button>
                 </div>
             `;
@@ -36,7 +37,7 @@ class UI {
             notesContainer.appendChild(noteElement);
         });
         
-        // Agregar event listeners a los botones de edición y borrado
+        // Agregar event listeners a los botones
         document.querySelectorAll('.edit-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const noteId = e.target.getAttribute('data-id');
@@ -48,6 +49,13 @@ class UI {
             btn.addEventListener('click', (e) => {
                 const noteId = e.target.getAttribute('data-id');
                 this.deleteNote(noteId);
+            });
+        });
+        
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const noteId = e.target.getAttribute('data-id');
+                this.copyNoteContent(noteId);
             });
         });
     }
@@ -93,6 +101,21 @@ class UI {
         if (confirm('¿Estás seguro de que quieres borrar esta nota?')) {
             Storage.deleteNote(noteId);
             this.displayNotes();
+        }
+    }
+    
+    static copyNoteContent(noteId) {
+        const note = Storage.getNoteById(noteId);
+        if (note) {
+            const textToCopy = `${note.title}\n\n${note.content}`;
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => {
+                    alert('Contenido de la nota copiado al portapapeles');
+                })
+                .catch(err => {
+                    console.error('Error al copiar: ', err);
+                    alert('No se pudo copiar el contenido');
+                });
         }
     }
     
