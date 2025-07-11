@@ -104,20 +104,21 @@ class UI {
         }
     }
     
-    static copyNoteContent(noteId) {
-        const note = Storage.getNoteById(noteId);
-        if (note) {
-            const textToCopy = `${note.title}\n\n${note.content}`;
-            navigator.clipboard.writeText(textToCopy)
-                .then(() => {
-                    alert('Contenido de la nota copiado al portapapeles');
-                })
-                .catch(err => {
-                    console.error('Error al copiar: ', err);
-                    alert('No se pudo copiar el contenido');
-                });
-        }
+static copyNoteContent(noteId) {
+    const note = Storage.getNoteById(noteId);
+    if (note) {
+        // Modificado: Solo copiamos note.content
+        const textToCopy = note.content; 
+        navigator.clipboard.writeText(textToCopy)
+            .then(() => {
+                alert('Contenido de la nota copiado al portapapeles');
+            })
+            .catch(err => {
+                console.error('Error al copiar: ', err);
+                alert('No se pudo copiar el contenido');
+            });
     }
+}
     
     static searchNotes(searchTerm) {
         const allNotes = Storage.getAllNotes();
